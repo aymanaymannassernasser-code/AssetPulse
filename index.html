@@ -4,47 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asset Manager v1.0</title>
-    <link rel="stylesheet" href="asset-style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-        <h1>🛠️ Asset Manager <span class="version">v1.0</span></h1>
-        <button id="exportBtn" class="btn-ui">📥 Export to Excel (CSV)</button>
-    </nav>
+    <header>
+        <div class="logo">🛠️ Asset Manager <span class="v-tag">v1.0</span></div>
+        <button id="exportCsv" class="secondary-btn">📥 Export to CSV</button>
+    </header>
 
-    <main>
-        <section id="inputForm">
-            <h3>Add New Asset</h3>
-            <div class="form-group">
-                <input type="text" id="assetName" placeholder="Asset Name (e.g. Motor A1)">
+    <div class="container">
+        <section class="card">
+            <h2>Add New Asset</h2>
+            <div class="form-row">
+                <input type="text" id="assetName" placeholder="Asset Name">
                 <input type="text" id="serialNum" placeholder="Serial Number">
-                <input type="text" id="location" placeholder="Location/Area">
+                <input type="text" id="location" placeholder="Location">
                 <select id="status">
                     <option value="Operational">✅ Operational</option>
                     <option value="Maintenance">🔧 Maintenance</option>
                     <option value="Broken">❌ Broken</option>
                 </select>
-                <button onclick="addAsset()" class="btn-primary">Add Asset</button>
+                <button onclick="addAsset()" class="primary-btn">Save Asset</button>
             </div>
         </section>
 
-        <section id="inventory">
-            <h3>Current Inventory</h3>
-            <table id="assetTable">
+        <section class="controls">
+            <input type="text" id="searchBar" onkeyup="filterAssets()" placeholder="Search assets by name or serial...">
+        </section>
+
+        <section class="card">
+            <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Asset Name</th>
                         <th>Serial #</th>
                         <th>Location</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="assetBody">
+                <tbody id="assetTableBody">
                     </tbody>
             </table>
         </section>
-    </main>
-    <script src="asset-app.js"></script>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
