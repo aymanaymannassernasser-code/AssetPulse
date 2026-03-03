@@ -1,113 +1,64 @@
-/* --- v1.2 MOPCO STYLESHEET --- */
 :root {
     --navy: #0a192f;
-    --blue: #007bff;
-    --light-bg: #f8f9fa;
-    --danger: #dc3545;
-    --success: #28a745;
-    --warning: #ffc107;
+    --dark-blue: #112240;
+    --accent: #64ffda;
+    --text: #ccd6f6;
+    --white: #ffffff;
+    --danger: #ff4d4d;
+    --success: #2ecc71;
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: var(--light-bg);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--navy);
+    color: var(--text);
     margin: 0;
-    color: #333;
+    line-height: 1.6;
 }
 
 header {
-    background: var(--navy);
-    color: white;
+    background: var(--dark-blue);
     padding: 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    border-bottom: 2px solid var(--accent);
 }
 
-/* Stats Bar */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
-}
+.v-tag { font-size: 0.6rem; color: var(--accent); border: 1px solid var(--accent); padding: 2px 5px; border-radius: 4px; }
 
-.stat-card {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.1rem;
-    border-top: 4px solid var(--blue);
-}
+.container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
 
-/* Table Design */
-.table-container {
-    background: white;
-    border-radius: 12px;
-    overflow-x: auto; /* Handles the many columns from your Excel */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
+/* Stats Section */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+.stat-card { background: var(--dark-blue); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #233554; }
+.stat-num { font-size: 1.8rem; font-weight: bold; color: var(--accent); }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 900px; /* Ensures columns don't squash */
-}
-
-th {
-    background: #e9ecef;
-    color: #495057;
-    padding: 15px;
-    text-align: left;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-td {
-    padding: 15px;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 0.9rem;
-}
-
-tr:hover {
-    background-color: #f1f3f5;
-    cursor: pointer;
-}
-
-/* Status Indicators */
-.status-Operational {
-    color: var(--success);
-    background: #e8f5e9;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.status-Maintenance {
-    color: var(--danger);
-    background: #ffebee;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-/* Search Bar */
+/* Search */
 .controls input {
     width: 100%;
-    padding: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 12px;
+    background: var(--dark-blue);
+    border: 1px solid #233554;
+    border-radius: 5px;
+    color: white;
     margin-bottom: 20px;
-    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-.controls input:focus {
-    border-color: var(--blue);
-    outline: none;
-}
+/* Table Section */
+.table-card { background: var(--dark-blue); border-radius: 8px; overflow: hidden; }
+.table-container { max-height: 600px; overflow-y: auto; overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th { position: sticky; top: 0; background: #1d2d50; color: var(--accent); padding: 12px; font-size: 0.8rem; text-transform: uppercase; z-index: 10; }
+td { padding: 12px; border-bottom: 1px solid #233554; font-size: 0.9rem; }
+tr:hover { background: #1d2d50; cursor: pointer; }
+
+/* Status Styles */
+.status-Operational { color: var(--success); font-weight: bold; }
+.status-Maintenance { color: var(--danger); font-weight: bold; }
+
+/* Buttons */
+.secondary-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+.secondary-btn:hover { background: rgba(100, 255, 218, 0.1); }

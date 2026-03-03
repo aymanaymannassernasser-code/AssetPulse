@@ -1,39 +1,52 @@
-<header>
-    <div class="logo">🛠️ MOPCO Asset Tracker <span class="v-tag">v1.2</span></div>
-    <div class="actions">
-        <input type="file" id="importCsv" accept=".csv" hidden>
-        <button class="secondary-btn" onclick="document.getElementById('importCsv').click()">📤 Import MOPCO CSV</button>
-        <button id="exportCsv" class="secondary-btn">📥 Export CSV</button>
-    </div>
-</header>
-
-<div class="container">
-    <div id="statsBar" class="stats-grid">
-        <div class="stat-card">Total Motors: <span id="totalCount">0</span></div>
-        <div class="stat-card">In Operation: <span id="opCount">0</span></div>
-        <div class="stat-card">Needs Maintenance: <span id="maintCount">0</span></div>
-    </div>
-
-    <section class="controls">
-        <input type="text" id="searchBar" onkeyup="filterAssets()" placeholder="Search by TAG No., Area, or KW...">
-    </section>
-
-    <section class="card">
-        <div class="table-container">
-            <table id="assetTable">
-                <thead>
-                    <tr>
-                        <th>TAG No.</th>
-                        <th>Process Area</th>
-                        <th>KW</th>
-                        <th>RPM</th>
-                        <th>Bearing (DE)</th>
-                        <th>Status</th>
-                        <th>Last Greasing</th>
-                    </tr>
-                </thead>
-                <tbody id="assetTableBody"></tbody>
-            </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOPCO Asset Manager v1.2.1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🛠️ MOPCO ASSET TRACKER <span class="v-tag">v1.2.1</span></div>
+        <div class="actions">
+            <input type="file" id="importCsv" accept=".csv" hidden>
+            <button class="secondary-btn" onclick="document.getElementById('importCsv').click()">📤 Import CSV</button>
+            <button id="exportCsv" class="secondary-btn">📥 Export CSV</button>
         </div>
-    </section>
-</div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">Total Motors <div id="totalCount" class="stat-num">0</div></div>
+            <div class="stat-card">Operational <div id="opCount" class="stat-num">0</div></div>
+            <div class="stat-card">Maintenance <div id="maintCount" class="stat-num">0</div></div>
+        </div>
+
+        <section class="controls">
+            <input type="text" id="searchBar" onkeyup="filterAssets()" placeholder="🔍 Search TAG No, KW, Area, or Bearing Type...">
+        </section>
+
+        <section class="main-layout">
+            <div class="table-card">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TAG No.</th>
+                                <th>Area</th>
+                                <th>Power (KW)</th>
+                                <th>Bearing (DE)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
