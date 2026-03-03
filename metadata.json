@@ -1,7 +1,0 @@
-{
-  "name": "AssetPulse Industrial Field Maintenance",
-  "description": "A production-grade, asset-centric mobile tool for reliability engineers to reconstruct maintenance systems through field observation and AI-assisted data extraction.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}

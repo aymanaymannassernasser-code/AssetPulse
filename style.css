@@ -1,0 +1,18 @@
+:root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+body { font-family: sans-serif; background: var(--bg); margin: 0; }
+nav { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.version { font-size: 0.7rem; background: var(--accent); padding: 2px 5px; border-radius: 4px; }
+
+main { padding: 2rem; max-width: 1000px; margin: auto; }
+#inputForm { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+.form-group { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 10px; }
+
+input, select { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+.btn-primary { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #ecf0f1; }
+.status-Operational { color: green; font-weight: bold; }
+.status-Maintenance { color: orange; font-weight: bold; }
+.status-Broken { color: red; font-weight: bold; }
