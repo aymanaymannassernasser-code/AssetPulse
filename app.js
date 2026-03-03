@@ -1,99 +1,76 @@
-// --- DATABASE INITIALIZATION (v1.0) ---
-let db;
-const request = indexedDB.open("AssetTrackerDB", 1);
-
-request.onupgradeneeded = (e) => {
-    db = e.target.result;
-    if (!db.objectStoreNames.contains("assets")) {
-        db.createObjectStore("assets", { keyPath: "id", autoIncrement: true });
-    }
-};
-
-request.onsuccess = (e) => {
-    db = e.target.result;
-    loadAssets();
-};
-
-// --- CORE FUNCTIONS ---
-function addAsset() {
-    const name = document.getElementById('assetName').value;
-    const serial = document.getElementById('serialNum').value;
-    const loc = document.getElementById('location').value;
-    const stat = document.getElementById('status').value;
-
-    if (!name) return alert("Please enter an asset name");
-
-    const asset = { name, serial, location: loc, status: stat, timestamp: new Date() };
-    const transaction = db.transaction(["assets"], "readwrite");
-    const store = transaction.objectStore("assets");
+// --- v1.2 MOPCO COLUMN MAPPING ---
+document.getElementById('importCsv').onchange = function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
     
-    store.add(asset);
-    transaction.oncomplete = () => {
-        document.getElementById('assetName').value = "";
-        document.getElementById('serialNum').value = "";
-        loadAssets();
+    reader.onload = function(event) {
+        const text = event.target.result;
+        const rows = text.split("\n").slice(2); // Skipping the 2 header rows in your file
+        
+        const transaction = db.transaction(["assets"], "readwrite");
+        const store = transaction.objectStore("assets");
+
+        rows.forEach(row => {
+            // Using a regex to handle commas inside quotes in your CSV
+            const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            
+            if (cols && cols.length > 10) {
+                const asset = {
+                    tag: cols[1]?.replace(/"/g, ""),         // TAG No.
+                    area: cols[2]?.replace(/"/g, ""),        // Process AREA
+                    desc: cols[3]?.replace(/"/g, ""),        // DESCRIPTION
+                    kw: cols[9]?.replace(/"/g, ""),          // KW
+                    rpm: cols[11]?.replace(/"/g, ""),        // RPM
+                    bearingDE: cols[14]?.replace(/"/g, ""),  // DE BEARING TYPE
+                    status: cols[60]?.includes("Can be taken") ? "Maintenance" : "Operational", // Operation Status
+                    lastGrease: cols[35]?.replace(/"/g, ""), // Date at Last Greasing
+                    notes: cols[59]?.replace(/"/g, "")       // COMMENTS (Arabic)
+                };
+                store.put(asset); // 'put' updates if TAG already exists
+            }
+        });
+
+        transaction.oncomplete = () => {
+            alert("MOPCO Master Data Imported Successfully!");
+            loadAssets();
+        };
     };
-}
+    reader.readAsText(file);
+};
 
 function loadAssets() {
     const tableBody = document.getElementById('assetTableBody');
     tableBody.innerHTML = "";
+    let counts = { total: 0, op: 0, maint: 0 };
 
-    const store = db.transaction("assets", "readonly").objectStore("assets");
-    store.openCursor().onsuccess = (e) => {
+    db.transaction("assets", "readonly").objectStore("assets").openCursor().onsuccess = (e) => {
         const cursor = e.target.result;
         if (cursor) {
-            const asset = cursor.value;
+            const a = cursor.value;
+            counts.total++;
+            if (a.status === "Operational") counts.op++; else counts.maint++;
+
             const row = `
-                <tr>
-                    <td><strong>${asset.name}</strong></td>
-                    <td>${asset.serial || 'N/A'}</td>
-                    <td>${asset.location || 'Unknown'}</td>
-                    <td class="status-${asset.status}">${asset.status}</td>
-                    <td>
-                        <button onclick="deleteAsset(${asset.id})" style="color:red; background:none; border:none; cursor:pointer;">🗑️</button>
-                    </td>
+                <tr onclick="viewDetails('${a.tag}')">
+                    <td><strong>${a.tag}</strong></td>
+                    <td>${a.area}</td>
+                    <td>${a.kw} KW</td>
+                    <td>${a.rpm}</td>
+                    <td>${a.bearingDE}</td>
+                    <td class="status-${a.status}">${a.status}</td>
+                    <td>${a.lastGrease || 'N/A'}</td>
                 </tr>
             `;
             tableBody.innerHTML += row;
             cursor.continue();
+        } else {
+            updateStats(counts);
         }
     };
 }
 
-function deleteAsset(id) {
-    if (confirm("Delete this asset?")) {
-        const transaction = db.transaction(["assets"], "readwrite");
-        transaction.objectStore("assets").delete(id);
-        transaction.oncomplete = () => loadAssets();
-    }
+function updateStats(c) {
+    document.getElementById('totalCount').innerText = c.total;
+    document.getElementById('opCount').innerText = c.op;
+    document.getElementById('maintCount').innerText = c.maint;
 }
-
-// --- UTILITIES ---
-function filterAssets() {
-    const query = document.getElementById('searchBar').value.toLowerCase();
-    const rows = document.querySelectorAll('#assetTableBody tr');
-    rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-    });
-}
-
-// Export data to CSV so you can open it in Excel
-document.getElementById('exportCsv').onclick = () => {
-    const store = db.transaction("assets", "readonly").objectStore("assets");
-    store.getAll().onsuccess = (e) => {
-        const allAssets = e.target.result;
-        let csvContent = "data:text/csv;charset=utf-8,Name,Serial,Location,Status\n";
-        
-        allAssets.forEach(a => {
-            csvContent += `${a.name},${a.serial},${a.location},${a.status}\n`;
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "factory_assets.csv");
-        document.body.appendChild(link);
-        link.click();
-    };
-};
